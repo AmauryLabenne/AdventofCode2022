@@ -4,7 +4,7 @@
 
 ### Day 1.1
 res = []
-with open('input1.txt') as f:
+with open('data/input1.txt') as f:
     res_k = 0
     for line in f:
         row = line.strip()
