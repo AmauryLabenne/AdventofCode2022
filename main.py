@@ -1,3 +1,7 @@
+import numpy as np
+import pandas as pd
+
+
 ############################
 ### Day 1
 ############################
@@ -23,8 +27,7 @@ sum(res[0:3])
 ############################
 ### Day 2
 ############################
-import numpy as np
-import pandas as pd
+
 
 dt = pd.read_csv('data/input2.txt', header=None, sep=" ", names=["ADV", "ME"])
 
@@ -92,3 +95,53 @@ def get_shape(row):
 dt = dt.assign(ME = dt.apply(lambda x : get_shape(x), axis=1))
 res_1_2 = np.sum(dt.apply(lambda x: get_score(x), axis = 1 ))
 res_1_2
+
+############################
+### Day 3
+############################
+import string
+
+### Day 3.1
+dt = pd.read_csv('data/input3.txt', header=None, sep=" ", names=["pack"])
+
+# Compute dictionnary for value of each letter
+dic_low = dict(zip(string.ascii_lowercase, list(range(1, 27))))
+dic_up = dict(zip(string.ascii_uppercase, list(range(27, 53))))
+full_dict = dict(dic_low, **dic_up)
+
+# Function to get value of item in common for a given pack
+
+def get_common_value(row):
+    len_row = len(row)
+    pack1 = row[slice(0, len_row//2)]
+    pack2 = row[slice(len_row//2, len_row)]
+    common = list(set(pack1).intersection(set(pack2)))[0]
+    value = full_dict[common]
+    return value
+
+res_3_1 = np.sum(dt.apply(lambda x: get_common_value(x['pack']), axis=1))
+res_3_1
+
+### Day 3.2
+n = dt.shape[0]
+n_group = n / 3
+
+# Create column of group
+L = [[i] * 3 for i in range(1, 101)]
+groups = ["G"+ str(item) for sublist in L for item in sublist]
+dt = dt.assign(groups=groups)
+
+def get_common_value_group(dt_group):
+    lst_set = [set(i) for i in dt_group['pack'].to_list()]
+    common = list(set.intersection(*lst_set))[0]
+    value = full_dict[common]
+    return value
+
+
+test = dt.iloc[0:3]
+get_common_value_group(test)
+
+# Apply on each group with groupby
+dt_grouped = dt.groupby('groups').apply(get_common_value_group).reset_index(name="value")
+res_3_2 = np.sum(dt_grouped['value'])
+res_3_2
