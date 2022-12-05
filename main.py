@@ -238,8 +238,10 @@ with open('data/input5.txt', "r") as f:
                 dic_col[col_2].append(val)
 
 # on recupere ensuite les derniers elements de chaque col de col_dict
-dic_col
-res_5_1 = "VWLCWGSDQ"
+res_5_1 = [dic_col[key][-1] for key in dic_col]
+res_5_1 = ''.join(res_5_1)
+res_5_1
+
 
 ### Day 5.2
 # Create dictionnary of columns idem as part 1
@@ -273,5 +275,7 @@ with open('data/input5.txt', "r") as f:
             dic_col[col_2].extend(temp)
 
 # on recupere ensuite les derniers elements de chaque col de col_dict
-dic_col
-res_5_2 = "TCGLQSLPW"
+res_5_2 = [dic_col[key][-1] for key in dic_col]
+res_5_2 = ''.join(res_5_1)
+res_5_2
+
