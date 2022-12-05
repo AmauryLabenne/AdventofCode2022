@@ -145,3 +145,133 @@ get_common_value_group(test)
 dt_grouped = dt.groupby('groups').apply(get_common_value_group).reset_index(name="value")
 res_3_2 = np.sum(dt_grouped['value'])
 res_3_2
+
+############################
+### Day 4
+############################
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+### Day 4.1
+dt = pd.read_csv('data/input4.txt', header=None, sep=",", names=["range1", "range2"])
+
+# Transform input 2 ranges into two sets
+def get_set_from_range(row):
+    rang = row
+    lst_int = [int(i) for i in rang.split("-")]
+    set_int = set(list(range(lst_int[0], 1 + lst_int[1])))
+    return set_int
+
+dt = dt.assign(set1 = dt.apply(lambda x: get_set_from_range(x["range1"]), axis=1))
+dt = dt.assign(set2 = dt.apply(lambda x: get_set_from_range(x["range2"]), axis=1))
+dt.head()
+
+# Return 1 if one set is contained into other
+def is_recovered(row):
+    tst1 = row["set1"].issubset(row["set2"])
+    tst2 = row["set2"].issubset(row["set1"])
+    res = 0
+    if tst1 or tst2:
+        res = 1
+    return res
+
+res_4_1 = np.sum(dt.apply(lambda x: is_recovered(x), axis=1))
+res_4_1
+
+### Day 4.2
+def get_inter(row):
+    tst1 = row["set1"].intersection(row["set2"])
+    res = 0
+    if len(tst1) > 0:
+        res = 1
+    return res
+
+
+res_4_2 = np.sum(dt.apply(lambda x: get_inter(x), axis=1))
+res_4_2
+
+############################
+### Day 5
+############################
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+### Day 5.1
+dt = pd.read_csv('data/input5.txt', header=None, sep=",",nrows=8,names=["V1"])
+dt
+
+# Try to convert stack in list of rows
+need_el = [i for i in range(1, 34, 4)]
+def get_list_rows(row):
+    a1 = [*row["V1"]]
+    a2 = [a1[i] for i in need_el]
+    return a2
+
+
+list_rows = dt.apply(lambda x: get_list_rows(x), axis=1)
+
+# Create dictionnary of columns
+dic_col = {}
+for j in range(0, 9):
+    col_j = list()
+    for i in range(0, 8):
+        col_j.append(list_rows.iloc[i][j])
+    print(col_j)
+    col_j.reverse()
+    col_j_clean = [val for val in col_j if val != " "]
+    col_dic_name = "col"+str(j+1)
+    dic_col[col_dic_name] = col_j_clean
+dic_col
+
+# Read and apply all instructions
+with open('data/input5.txt', "r") as f:
+    for line in f.readlines():
+        if line.startswith("move"):
+            row = line
+            row_lst = row.split()
+            print(row_lst)
+            nb_move = int(row_lst[1])
+            col_1 = "col" + row_lst[3]
+            col_2 = "col" + row_lst[5]
+            for k in range(0, nb_move):
+                val = dic_col[col_1].pop()
+                dic_col[col_2].append(val)
+
+# on recupere ensuite les derniers elements de chaque col de col_dict
+dic_col
+res_5_1 = "VWLCWGSDQ"
+
+### Day 5.2
+# Create dictionnary of columns idem as part 1
+dic_col = {}
+for j in range(0, 9):
+    col_j = list()
+    for i in range(0, 8):
+        col_j.append(list_rows.iloc[i][j])
+    print(col_j)
+    col_j.reverse()
+    col_j_clean = [val for val in col_j if val != " "]
+    col_dic_name = "col"+str(j+1)
+    dic_col[col_dic_name] = col_j_clean
+dic_col
+
+# Read and apply all instructions
+with open('data/input5.txt', "r") as f:
+    for line in f.readlines():
+        if line.startswith("move"):
+            row = line
+            row_lst = row.split()
+            print(row_lst)
+            nb_move = int(row_lst[1])
+            col_1 = "col" + row_lst[3]
+            col_2 = "col" + row_lst[5]
+            temp = list()
+            for k in range(0, nb_move):
+                val = dic_col[col_1].pop()
+                temp.append(val)
+            temp.reverse()
+            dic_col[col_2].extend(temp)
+
+# on recupere ensuite les derniers elements de chaque col de col_dict
+dic_col
+res_5_2 = "TCGLQSLPW"
