@@ -164,8 +164,8 @@ def get_set_from_range(row):
     set_int = set(list(range(lst_int[0], 1 + lst_int[1])))
     return set_int
 
-dt = dt.assign(set1 = dt.apply(lambda x: get_set_from_range(x["range1"]), axis=1))
-dt = dt.assign(set2 = dt.apply(lambda x: get_set_from_range(x["range2"]), axis=1))
+dt = dt.assign(set1=dt.apply(lambda x: get_set_from_range(x["range1"]), axis=1))
+dt = dt.assign(set2=dt.apply(lambda x: get_set_from_range(x["range2"]), axis=1))
 dt.head()
 
 # Return 1 if one set is contained into other
