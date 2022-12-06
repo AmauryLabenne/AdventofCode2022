@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 ############################
@@ -193,8 +195,6 @@ res_4_2
 ############################
 ### Day 5
 ############################
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 ### Day 5.1
 dt = pd.read_csv('data/input5.txt', header=None, sep=",",nrows=8,names=["V1"])
@@ -279,3 +279,46 @@ res_5_2 = [dic_col[key][-1] for key in dic_col]
 res_5_2 = ''.join(res_5_1)
 res_5_2
 
+############################
+### Day 6
+############################
+
+
+### Day 6.1
+
+# Get data and transform in list of characters
+with open('data/input6.txt', "r") as f:
+    for line in f.readlines():
+        dt = line
+l_dt = [*dt]
+n = len(l_dt)
+
+# Window of size 4 compare len of list and len of set (wich is made of unique char)
+for i in range(3, n):
+    tmp = l_dt[(i-3):i+1]
+    n_tmp = len(tmp)
+    n_set = len(set(tmp))
+    if n_set == n_tmp:
+        print(tmp)
+        print(i)
+        print("Result = {0}".format(i+1))
+        break
+
+### Day 6.2
+# Window of size 14 compare len of list and len of set (wich is made of unique char)
+for i in range(13, n):
+    tmp = l_dt[(i-13):i+1]
+    n_tmp = len(tmp)
+    n_set = len(set(tmp))
+    if n_set == n_tmp:
+        print(tmp)
+        print(i)
+        print("Result = {0}".format(i+1))
+        break
+
+############################
+### Day 7
+############################
+
+
+### Day 7.1
